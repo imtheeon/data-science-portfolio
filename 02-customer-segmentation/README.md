@@ -4,9 +4,10 @@ RFM feature engineering + K-means clustering on real e-commerce transaction
 data, with each segment translated into a concrete marketing action.
 
 **Real dataset**: [Online Retail II dataset](https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci)
-via Kaggle — 1,067,371 real transaction line items across 5,881 real
-customers (after excluding cancellations and rows with no customer ID).
-Not simulated.
+via Kaggle — 1,067,371 real raw transaction line items, cleaned down to
+805,620 rows (excluding cancellations, rows with no customer ID, and
+non-positive quantities) and aggregated into RFM features for 5,881 real
+customers. Not simulated.
 
 ## Segments found
 
@@ -65,4 +66,6 @@ deliverable; a live demo link will be added here after deployment.
 - k=2 is the genuine silhouette-selected result, not a forced choice — an
   earlier run before the log1p fix produced a degenerate 22-vs-5,859
   outlier split; after correcting for skew, silhouette scores decline
-  smoothly from k=2 (0.418) through k=8 (0.317), with k=2 the real maximum.
+  overall from k=2 (0.418) through k=8 (0.317), with a small uptick at k=5
+  (0.361 at k=4 → 0.366 at k=5) before continuing to decline — k=2 remains
+  the real maximum throughout.

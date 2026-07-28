@@ -21,7 +21,7 @@ FEATURES = ["Recency", "Frequency", "Monetary"]
 LOG_FEATURES = ["Frequency", "Monetary"]
 
 
-def _scaled(rfm_df: pd.DataFrame):
+def scale_features(rfm_df: pd.DataFrame):
     transformed = rfm_df[FEATURES].copy()
     for col in LOG_FEATURES:
         transformed[col] = np.log1p(transformed[col])
@@ -30,7 +30,7 @@ def _scaled(rfm_df: pd.DataFrame):
 
 
 def evaluate_k_range(rfm_df: pd.DataFrame, k_range: range, random_state: int = 42) -> pd.DataFrame:
-    X = _scaled(rfm_df)
+    X = scale_features(rfm_df)
     rows = []
     for k in k_range:
         model = KMeans(n_clusters=k, random_state=random_state, n_init=10)
@@ -46,7 +46,7 @@ def evaluate_k_range(rfm_df: pd.DataFrame, k_range: range, random_state: int = 4
 
 
 def fit_kmeans(rfm_df: pd.DataFrame, k: int, random_state: int = 42) -> tuple[KMeans, pd.Series]:
-    X = _scaled(rfm_df)
+    X = scale_features(rfm_df)
     model = KMeans(n_clusters=k, random_state=random_state, n_init=10)
     labels = model.fit_predict(X)
     return model, pd.Series(labels, index=rfm_df.index, name="Cluster")

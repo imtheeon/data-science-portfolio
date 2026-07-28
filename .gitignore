@@ -12,6 +12,8 @@ env/
 # Data (large downloaded datasets are not committed; scripts re-fetch them)
 *.csv
 !**/data/example_tests.py
+# Small, deliberately-committed analysis output (not a downloaded dataset)
+!02-customer-segmentation/cluster_profile.csv
 
 # Env / secrets
 .env

@@ -7,10 +7,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import pandas as pd
 from sklearn.decomposition import PCA
 
-from analysis.clustering import _scaled, evaluate_k_range, fit_kmeans
+from analysis.clustering import evaluate_k_range, fit_kmeans, scale_features
 from analysis.rfm import compute_rfm
 from analysis.segment_actions import label_all_clusters, profile_clusters
 from data.load_online_retail import load_raw
@@ -42,16 +41,21 @@ def main() -> None:
     fig.savefig(CHARTS_DIR / "k_selection.png", dpi=150)
     plt.close(fig)
 
-    model, labels = fit_kmeans(rfm, k=best_k)
+    _, labels = fit_kmeans(rfm, k=best_k)
     rfm_clustered = rfm.copy()
     rfm_clustered["Cluster"] = labels
 
+    # Real median Recency/Frequency/Monetary across all individual customers
+    # (before/regardless of clustering) — the baseline label_all_clusters
+    # benchmarks each cluster against, per the README's documented intent.
+    overall_medians = rfm_clustered[["Recency", "Frequency", "Monetary"]].median()
+
     profile = profile_clusters(rfm_clustered)
-    profile = label_all_clusters(profile)
+    profile = label_all_clusters(profile, overall_medians)
     print(profile.to_string(index=False))
     profile.to_csv(CHARTS_DIR.parent / "cluster_profile.csv", index=False)
 
-    X_scaled = _scaled(rfm_clustered)
+    X_scaled = scale_features(rfm_clustered)
     pca = PCA(n_components=2, random_state=42)
     coords = pca.fit_transform(X_scaled)
     fig2, ax2 = plt.subplots(figsize=(7, 6))

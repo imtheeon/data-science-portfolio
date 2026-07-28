@@ -6,6 +6,17 @@ Cleaning rules
 - Rows with a missing Customer ID are dropped (can't attribute to a segment).
 - Cancelled/returned orders (Invoice starting with "C") are excluded from
   Frequency and Monetary — they represent returns, not purchases.
+- Rows with non-positive Quantity are dropped.
+
+Deliberately NOT filtered (left as-is, a scope decision rather than an
+oversight):
+- Exact-duplicate line-item rows are not de-duplicated. In this dataset
+  duplicates typically represent genuine repeated line items (e.g. the same
+  SKU rung up twice on one invoice) rather than data-entry errors, so
+  removing them would silently understate real Frequency/Monetary.
+- Rows with Price == 0 (e.g. free promotional items, samples) are not
+  excluded. They contribute 0 to Monetary but still count toward Frequency
+  via their invoice, which is treated as acceptable for this analysis.
 """
 
 from __future__ import annotations

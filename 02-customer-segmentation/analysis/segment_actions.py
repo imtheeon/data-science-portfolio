@@ -44,8 +44,13 @@ def label_segment(cluster_row: pd.Series, overall_medians: pd.Series) -> tuple[s
     return "Hibernating", "Low-cost re-engage email; deprioritize spend versus other segments."
 
 
-def label_all_clusters(profile: pd.DataFrame) -> pd.DataFrame:
-    overall_medians = profile[["Recency", "Frequency", "Monetary"]].median()
+def label_all_clusters(profile: pd.DataFrame, overall_medians: pd.Series) -> pd.DataFrame:
+    """Label every cluster in `profile` against `overall_medians` — the real
+    median Recency/Frequency/Monetary computed across all individual
+    customers in the RFM DataFrame (before/regardless of clustering), not a
+    median of the per-cluster means. Callers (see run_analysis.py) must
+    compute that baseline from the ungrouped customer-level data and pass it
+    in here."""
     labels = profile.apply(lambda row: label_segment(row, overall_medians), axis=1)
     profile = profile.copy()
     profile["Segment"] = [l[0] for l in labels]
