@@ -13,8 +13,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import kaggle
-
 DATA_DIR = Path(__file__).parent
 CSV_PATH = DATA_DIR / "cookie_cats.csv"
 KAGGLE_DATASET = "mursideyarkin/mobile-games-ab-testing-cookie-cats"
@@ -23,6 +21,8 @@ KAGGLE_DATASET = "mursideyarkin/mobile-games-ab-testing-cookie-cats"
 def download() -> Path:
     if CSV_PATH.exists():
         return CSV_PATH
+
+    import kaggle
 
     kaggle.api.authenticate()
     kaggle.api.dataset_download_files(
