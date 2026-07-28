@@ -49,6 +49,9 @@ env/
 
 # OS
 .DS_Store
+
+# Subagent-driven-development scratch workspace (ledgers, briefs, review packages)
+.superpowers/
 ```
 
 - [ ] **Step 2: Write root `README.md`**
