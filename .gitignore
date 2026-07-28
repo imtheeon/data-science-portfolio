@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (large downloaded datasets are not committed; scripts re-fetch them)
+*.csv
+!**/data/example_tests.py
+
+# Env / secrets
+.env
+
+# OS
+.DS_Store
+
+# Subagent-driven-development scratch workspace (ledgers, briefs, review packages)
+.superpowers/
