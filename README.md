@@ -15,7 +15,7 @@ labeled explicitly in its README.
 
 | # | Project | What it demonstrates | Demo |
 |---|---------|----------------------|------|
-| 1 | [A/B Testing & Experimentation](01-ab-testing-experimentation/) | Hypothesis testing, power analysis, ship/no-ship decisions | [Live demo](README.md) _(update once Streamlit Cloud URL exists)_ |
+| 1 | [A/B Testing & Experimentation](01-ab-testing-experimentation/) | Hypothesis testing, power analysis, ship/no-ship decisions | _pending deployment_ |
 | 2 | [Customer Segmentation](02-customer-segmentation/) | RFM analysis, K-means clustering, marketing action mapping | _pending_ |
 | 3 | [NLP Review Analysis](03-nlp-review-analysis/) | Sentiment classification, topic modeling | _pending_ |
 | 4 | [Movie Recommender](04-movie-recommender/) | Collaborative filtering, recommendation evaluation | _pending_ |
