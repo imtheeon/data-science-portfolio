@@ -14,6 +14,9 @@ env/
 !**/data/example_tests.py
 # Small, deliberately-committed analysis output (not a downloaded dataset)
 !02-customer-segmentation/cluster_profile.csv
+# Deliberately-committed full analyzed sample (scored/topic-tagged output, not
+# the raw downloaded dataset) - consumed by the Task 5 Streamlit demo.
+!03-nlp-review-analysis/analyzed_sample.csv
 
 # Env / secrets
 .env
