@@ -56,7 +56,8 @@ streamlit run app.py                    # interactive app
 
 ## Live demo
 
-[Streamlit Community Cloud link — added after deployment approval]
+Not yet deployed — a live Streamlit Community Cloud demo will be linked
+here after deployment.
 
 ## Notes
 
