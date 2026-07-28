@@ -1,3 +1,3 @@
 Cluster,CustomerCount,PctCustomers,PctRevenue,Recency,Frequency,Monetary,Segment,MarketingAction
-0,5859,99.62591396021084,78.10869358434903,202.12749615975423,5.773340160436935,2365.4481529271206,Hibernating,Low-cost re-engage email; deprioritize spend versus other segments.
-1,22,0.3740860397891515,21.891306415650966,23.09090909090909,143.13636363636363,176557.65681818177,Champions,Enroll in a loyalty/VIP rewards program to protect this high-value relationship.
+0,2678,45.53647338887944,90.24927911823742,63.1370425690814,11.58924570575056,5979.580628827483,Champions,Enroll in a loyalty/VIP rewards program to protect this high-value relationship.
+1,3203,54.463526611120564,9.750720881762579,317.10646269122697,1.8541991882610054,540.153685295036,Hibernating,Low-cost re-engage email; deprioritize spend versus other segments.
