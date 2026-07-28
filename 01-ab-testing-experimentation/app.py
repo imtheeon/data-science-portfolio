@@ -1,10 +1,12 @@
 # app.py
 """Streamlit app: A/B Testing & Experimentation Analysis.
 
-Two modes:
+Three modes:
   - Real data: the Cookie Cats mobile-game retention experiment (Kaggle).
-  - Simulated examples: 5 labeled-synthetic scenarios illustrating distinct
-    verdict types (borderline, clear win, inconclusive, harmful, multi-variant).
+  - Simulated examples: labeled-synthetic scenarios illustrating distinct
+    verdict types (borderline, clear win, inconclusive, harmful).
+  - Multi-variant example (simulated): a multi-candidate search-algorithm
+    test with multiple-comparison correction.
 """
 
 from __future__ import annotations
@@ -23,6 +25,17 @@ from visualization.charts import (
     multivariant_bar_chart,
     p_value_comparison_chart,
 )
+
+@st.cache_data(show_spinner="Loading Cookie Cats dataset...")
+def _load_cookie_cats_data():
+    """Cached wrapper around analysis.cookie_cats_analysis.load_data.
+
+    Avoids re-reading the 90k-row CSV and recomputing on every widget
+    interaction. Wraps an imported function, so it can't be decorated
+    directly with @st.cache_data at its own definition site.
+    """
+    return load_data()
+
 
 st.set_page_config(page_title="A/B Testing & Experimentation", layout="wide")
 st.title("A/B Testing & Experimentation Analysis")
@@ -44,7 +57,19 @@ if mode == "Real data: Cookie Cats (Kaggle)":
         "not simulated. Does moving the level-30 paywall gate to level 40 "
         "change player retention?"
     )
-    df = load_data()
+    try:
+        df = _load_cookie_cats_data()
+    except Exception as e:
+        st.error(
+            "**Could not load the real Cookie Cats dataset.** This mode "
+            "downloads data via the Kaggle API, which requires Kaggle "
+            "credentials (`~/.kaggle/kaggle.json`) that aren't available in "
+            "this deployment.\n\n"
+            "Try the **\"Simulated examples\"** or **\"Multi-variant example "
+            "(simulated)\"** modes instead — they don't require Kaggle "
+            f"access.\n\n*Details: {e}*"
+        )
+        st.stop()
     st.write(f"Loaded **{len(df):,}** real players.")
 
     metric = st.selectbox("Retention metric", ["retention_1", "retention_7"])
@@ -66,7 +91,7 @@ if mode == "Real data: Cookie Cats (Kaggle)":
         lift_confidence_interval_chart(z.absolute_lift, z.ci_low, z.ci_high, z.is_significant),
         use_container_width=True,
     )
-    st.write(f"Achieved power: **{power.power:.2f}**")
+    st.write(f"Achieved power (post-hoc, from observed effect): **{power.power:.2f}**")
 
     verdict_color = {"ship": "green", "hold": "orange", "no-ship": "red"}[verdict.decision]
     st.markdown(f"### Verdict: :{verdict_color}[{verdict.decision.upper()}]")
@@ -76,9 +101,9 @@ if mode == "Real data: Cookie Cats (Kaggle)":
 elif mode == "Simulated examples":
     st.header("Simulated Example Scenarios")
     st.info(
-        "**Simulated data** — these 5 scenarios use seeded-RNG synthetic "
-        "counts, chosen to illustrate 5 distinct real-world verdicts. "
-        "Not real experiment data."
+        f"**Simulated data** — these {len(ALL_EXAMPLES)} scenarios use "
+        "seeded-RNG synthetic counts, chosen to illustrate distinct "
+        "real-world verdicts. Not real experiment data."
     )
     example_key = st.selectbox(
         "Scenario", options=[ex.key for ex in ALL_EXAMPLES],
