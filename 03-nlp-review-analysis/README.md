@@ -27,12 +27,17 @@ by class imbalance — about 78% of this sample is star-rating-positive, so
 even an "always predict positive" baseline would land close to that
 number. Looking at the crosstab instead of the single accuracy figure:
 VADER is genuinely strong on positive reviews (14,727/15,595 correctly
-classified) and reasonable on negative ones (1,168/1,886), but it is weak
-on neutral/mixed sentiment — only 59 of 1,519 true-neutral (3-star)
-reviews were classified as neutral, with most instead pulled toward
-positive (1,190) or negative (270). In short: VADER reliably separates
-clearly positive from clearly negative reviews, but it can't detect the
-"it's fine, not great" middle ground that 3-star ratings represent.
+classified, ~94.4%), but noticeably weaker on negative reviews
+(1,168/2,886 correctly classified, ~40.5%) — in fact more true-negative
+reviews get misclassified as positive (1,580) than are correctly
+identified as negative (1,168). It is weakest of all on neutral/mixed
+sentiment — only 59 of 1,519 true-neutral (3-star) reviews were
+classified as neutral, with most instead pulled toward positive (1,190)
+or negative (270). In short: VADER is a reliable positive-sentiment
+detector, but it under-detects negative sentiment and essentially can't
+detect the "it's fine, not great" middle ground that 3-star ratings
+represent — both real limitations, not just an artifact of the neutral
+class alone.
 
 ## Topics found (NMF, 8 topics)
 
