@@ -20,7 +20,8 @@ Does moving the level-30 paywall gate to level 40 change player retention?
 hurts long-term retention, so it should not ship. 1-day retention shows no
 significant difference, but the test is underpowered (43% achieved power)
 at that horizon, so that result is a "hold, collect more data" rather than
-proof of no effect.
+proof of no effect. ("Achieved power" here is computed post-hoc from the
+observed effect size, not a pre-registered design power — see Method below.)
 
 ## Simulated teaching examples
 
@@ -32,17 +33,31 @@ correction.
 
 ## Method
 
+**What the live app shows:**
+
 - Two-proportion z-test and Welch's t-test implemented from first
   principles (see `stats/frequentist.py`), cross-validated against
   `statsmodels`/`scipy` reference implementations in `tests/`.
-- Power analysis (`stats/power.py`) and O'Brien-Fleming sequential
-  monitoring (`stats/sequential.py`) for practical experiment design.
-- Bayesian Beta-Binomial analysis (`stats/bayesian.py`) as an alternative
-  to the frequentist framework.
+- Power analysis (`stats/power.py`) — achieved power is computed post-hoc
+  from the *observed* effect size. That's a common diagnostic, but it's a
+  statistically weaker signal than pre-registering a minimum detectable
+  effect and its design power before running the test; treat it as a
+  sanity check, not a substitute.
+- Multi-variant testing with Bonferroni and Benjamini-Hochberg
+  multiple-comparison correction (`stats/multivariate.py`).
 - Ship/hold/no-ship recommendation logic (`analysis/verdict.py`) that
   accounts for both significance and achieved power — a non-significant
   underpowered test is flagged "hold", not treated the same as a
   well-powered null result.
+
+**Also implemented in the stats library, not yet wired into the app UI:**
+
+- Bayesian Beta-Binomial analysis (`stats/bayesian.py`) as an alternative
+  to the frequentist framework — implemented and unit-tested, but not
+  exposed as an app mode yet.
+- O'Brien-Fleming sequential monitoring (`stats/sequential.py`) for
+  interim-look experiment design — implemented and unit-tested, for
+  future extension.
 
 ## Run it locally
 

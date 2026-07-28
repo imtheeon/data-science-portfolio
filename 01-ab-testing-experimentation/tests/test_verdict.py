@@ -30,5 +30,10 @@ def test_not_significant_low_power_holds():
 def test_not_significant_adequate_power_no_ships():
     z = two_proportion_z_test(300, 3000, 300, 3000)  # identical rates, huge n
     p = current_power(z.control_rate, z.variant_rate, z.control_n, z.variant_n)
+    # min_power=0.05, not 0.5: with identical control/variant rates the
+    # observed effect is ~0, so achieved (post-hoc) power is mathematically
+    # bounded near alpha (~0.05) no matter how large n gets — 0.5 would be
+    # unreachable here and would never exercise the "adequately powered
+    # null" branch below.
     verdict = recommend(z, p, min_power=0.05)
     assert verdict.decision == "no-ship"
