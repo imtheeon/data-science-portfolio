@@ -41,6 +41,7 @@ def main() -> None:
     print(f"RMSE on {len(predictions):,} real held-out test ratings: {score:.4f}")
 
     precisions = []
+    random_baseline_precisions = []
     sample_users = test["user_id"].unique()[:50]
     for user_id in sample_users:
         if user_id not in matrix.index:
@@ -50,11 +51,36 @@ def main() -> None:
             continue
         recs = recommend_for_user(matrix, similarity, user_id, n=TOP_N, k=K_NEIGHBORS)
         precisions.append(precision_at_k(recs, relevant, TOP_N))
+
+        # Real random baseline for this same user: the expected Precision@5
+        # of drawing TOP_N items uniformly at random (no replacement) from
+        # the exact same candidate pool recommend_for_user draws from
+        # (items in the train matrix this user hasn't rated). By linearity
+        # of expectation, E[precision@k] = R / N for any k, where R is the
+        # number of relevant items in the candidate pool and N is the pool
+        # size -- computed analytically, not simulated, but exact.
+        user_ratings = matrix.loc[user_id]
+        candidate_pool = user_ratings[user_ratings == 0].index
+        n_candidates = len(candidate_pool)
+        if n_candidates > 0:
+            n_relevant_in_pool = len(relevant & set(candidate_pool))
+            random_baseline_precisions.append(n_relevant_in_pool / n_candidates)
+
     mean_precision = float(np.mean(precisions)) if precisions else float("nan")
+    mean_random_baseline = (
+        float(np.mean(random_baseline_precisions)) if random_baseline_precisions else float("nan")
+    )
     print(
         f"Mean Precision@{TOP_N} over {len(precisions)} real users with "
         f"relevant held-out items: {mean_precision:.4f}"
     )
+    print(
+        f"Random baseline Precision@{TOP_N} over the same {len(random_baseline_precisions)} "
+        f"users (expected value of {TOP_N} random picks from each user's own candidate "
+        f"pool, computed analytically as R/N and averaged): {mean_random_baseline:.4f}"
+    )
+    if mean_random_baseline > 0:
+        print(f"Model is {mean_precision / mean_random_baseline:.2f}x the random baseline.")
 
     print("\nExample recommendations:")
     for user_id in sample_users[:3]:

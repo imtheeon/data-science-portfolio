@@ -13,13 +13,19 @@ Evaluated on the official `u1.base`/`u1.test` 80/20 split:
 
 - **RMSE**: 1.0424 on 19,968 real held-out test ratings
 - **Precision@5**: 0.0320 averaged over 50 real users with relevant held-out items
+- **Random baseline Precision@5**: 0.0182 — the analytically-computed
+  expected Precision@5 of picking 5 items at random from each of those
+  same 50 users' own candidate pool (unrated items in the training
+  matrix), averaged the same way. See `run_analysis.py` for the exact
+  R/N computation.
 
 **What this tells you**: on a 1-5 rating scale, an RMSE of ~1.04 means
 predictions are typically off by about one star — usable for ranking
 but not precise. A Precision@5 of 0.032 means roughly 1 in 30 top-5
 recommendations lands on an item the user actually rated highly in the
-held-out set; that's well above what 5 random picks from a 1,682-movie
-catalog would produce, but a reminder that top-N hit-rate is a hard,
+held-out set — about **1.76x the random baseline of 0.0182**, computed
+the same way over the same 50 users. That's a real, modest edge over
+chance, not a dramatic one; a reminder that top-N hit-rate is a hard,
 sparse metric on this dataset.
 
 ## Example recommendations (real output)
@@ -98,5 +104,14 @@ _pending deployment_
 
 - Dataset downloads automatically from grouplens.org on first run (no
   account/auth needed); not committed to this repo.
-- Every number above comes from `run_analysis.py` — see that file for
-  the exact computation.
+- The current real numbers above (RMSE, Precision@5, random baseline,
+  example recommendations) come from `run_analysis.py` — see that file
+  for the exact computation. The pre-fix comparison numbers in "Why the
+  metrics got slightly worse after the fix" (RMSE 0.9955, Precision@5
+  0.0360, "11 of 13" niche titles, and the training-rating counts like
+  31/14) are not reproduced by `run_analysis.py` as it stands today —
+  they were computed during the code-review process that led to the
+  shrinkage fix (a one-off audit against the pre-fix, unshrunk version
+  of `compute_item_similarity`), and are documented here as project
+  history rather than a number you can regenerate by re-running the
+  current script.

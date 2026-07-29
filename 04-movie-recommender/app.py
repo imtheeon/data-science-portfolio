@@ -17,7 +17,9 @@ st.set_page_config(page_title="Movie Recommender", layout="centered")
 st.title("Movie Recommender (Item-Based Collaborative Filtering)")
 st.caption(
     "Real MovieLens 100k ratings — recommendations computed live from "
-    "real rating patterns, not hardcoded."
+    "real rating patterns, not hardcoded. This demo trains on the full "
+    "100k ratings (not the u1.base split used for the published RMSE/"
+    "Precision@5 in the README), so it isn't literally the evaluated model."
 )
 
 
