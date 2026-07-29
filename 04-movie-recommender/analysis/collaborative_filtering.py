@@ -31,6 +31,10 @@ def compute_item_similarity(user_item_matrix: pd.DataFrame, beta: float = 20.0) 
     co_counts = rated.T @ rated
 
     shrinkage = co_counts / (co_counts + beta)
+    # Note: shrinkage also discounts the diagonal (self-similarity, normally
+    # 1.0, comes out slightly below 1.0 after shrinkage). Harmless today --
+    # nothing calls predict_rating on an item the user has already rated --
+    # but flagged so a future reader doesn't mistake it for a bug.
     return raw_sim * shrinkage
 
 
@@ -69,6 +73,9 @@ def recommend_for_user(
     n: int = 5,
     k: int = 20,
 ) -> list[int]:
+    if user_id not in user_item_matrix.index:
+        return []
+
     user_ratings = user_item_matrix.loc[user_id]
     unrated_items = user_ratings[user_ratings == 0].index
 
