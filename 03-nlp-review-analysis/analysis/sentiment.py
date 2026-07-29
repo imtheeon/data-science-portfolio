@@ -4,6 +4,7 @@ star ratings."""
 
 from __future__ import annotations
 
+import nltk
 import pandas as pd
 from nltk.sentiment import SentimentIntensityAnalyzer
 
@@ -13,7 +14,13 @@ _analyzer: SentimentIntensityAnalyzer | None = None
 def _get_analyzer() -> SentimentIntensityAnalyzer:
     global _analyzer
     if _analyzer is None:
-        _analyzer = SentimentIntensityAnalyzer()
+        try:
+            _analyzer = SentimentIntensityAnalyzer()
+        except LookupError:
+            # Fresh environment (e.g. Streamlit Cloud) with no NLTK data
+            # downloaded yet - fetch the lexicon once, then retry.
+            nltk.download("vader_lexicon", quiet=True)
+            _analyzer = SentimentIntensityAnalyzer()
     return _analyzer
 
 
