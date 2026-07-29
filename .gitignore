@@ -11,11 +11,14 @@ env/
 
 # Data (large downloaded datasets are not committed; scripts re-fetch them)
 *.csv
+*.sqlite
+03-nlp-review-analysis/data/hashes.txt
 !**/data/example_tests.py
 # Small, deliberately-committed analysis output (not a downloaded dataset)
 !02-customer-segmentation/cluster_profile.csv
 # Deliberately-committed full analyzed sample (scored/topic-tagged output, not
-# the raw downloaded dataset) - consumed by the Task 5 Streamlit demo.
+# the raw downloaded dataset) - committed so the scored output is inspectable
+# without needing Kaggle credentials.
 !03-nlp-review-analysis/analyzed_sample.csv
 
 # Env / secrets
