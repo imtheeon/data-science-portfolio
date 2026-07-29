@@ -19,7 +19,7 @@ labeled explicitly in its README.
 | 2 | [Customer Segmentation](02-customer-segmentation/) | RFM analysis, K-means clustering, marketing action mapping | [README](02-customer-segmentation/README.md) _(pending deployment)_ |
 | 3 | [NLP Review Analysis](03-nlp-review-analysis/) | Sentiment classification, topic modeling | _pending deployment_ |
 | 4 | [Movie Recommender](04-movie-recommender/) | Collaborative filtering, recommendation evaluation | _pending deployment_ |
-| 5 | [Fraud Detection API](05-fraud-detection-api/) | Imbalanced classification, live FastAPI deployment | _pending_ |
+| 5 | [Fraud Detection API](05-fraud-detection-api/) | Imbalanced classification, live FastAPI deployment | _pending deployment_ |
 
 ## Note on data
 
