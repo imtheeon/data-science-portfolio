@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: fraud-detection-api
+    runtime: docker
+    # This is a monorepo — the Dockerfile and app code live in
+    # 05-fraud-detection-api/, not the repo root. `rootDir` scopes the
+    # build/deploy context (including dockerfilePath and dockerContext
+    # below) to that subdirectory, per Render's monorepo Blueprint support.
+    rootDir: 05-fraud-detection-api
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: false

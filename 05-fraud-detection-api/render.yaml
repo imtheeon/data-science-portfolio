@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: fraud-detection-api
-    env: docker
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
-    plan: free
-    healthCheckPath: /health
-    autoDeploy: false
