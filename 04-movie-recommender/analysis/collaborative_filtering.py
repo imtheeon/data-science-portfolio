@@ -13,9 +13,25 @@ def build_user_item_matrix(ratings: pd.DataFrame) -> pd.DataFrame:
     return ratings.pivot_table(index="user_id", columns="item_id", values="rating", fill_value=0)
 
 
-def compute_item_similarity(user_item_matrix: pd.DataFrame) -> pd.DataFrame:
+def compute_item_similarity(user_item_matrix: pd.DataFrame, beta: float = 20.0) -> pd.DataFrame:
+    """Item-item cosine similarity, shrunk toward zero for item pairs with
+    few shared raters. Raw cosine similarity on sparse co-ratings is
+    unreliable: two items co-rated by a single user can score a "perfect"
+    1.0 despite being one data point, not a signal. We down-weight each
+    pair's similarity by its co-rating support using the standard
+    neighborhood-CF shrinkage form `raw_sim * (co_count / (co_count + beta))`
+    (see e.g. Bell & Koren's neighborhood interpolation weighting), so pairs
+    with few shared raters shrink toward 0 while well-supported pairs are
+    left close to their raw similarity. beta=20 is a common default shrinkage
+    constant in the neighborhood-CF literature and is not tuned here."""
     sim = cosine_similarity(user_item_matrix.T.values)
-    return pd.DataFrame(sim, index=user_item_matrix.columns, columns=user_item_matrix.columns)
+    raw_sim = pd.DataFrame(sim, index=user_item_matrix.columns, columns=user_item_matrix.columns)
+
+    rated = (user_item_matrix > 0).astype(int)
+    co_counts = rated.T @ rated
+
+    shrinkage = co_counts / (co_counts + beta)
+    return raw_sim * shrinkage
 
 
 def predict_rating(
