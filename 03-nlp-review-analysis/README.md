@@ -12,28 +12,28 @@ of the full ~568k — stated honestly, not the full dataset.
 Ratings 4-5 -> "positive", 3 -> "neutral", 1-2 -> "negative"; VADER's
 compound score thresholded the same way.
 
-**Agreement with real star ratings: 79.77%** (15,954/20,000)
+**Agreement with real star ratings: 79.94%** (15,989/20,000)
 
 | true \ predicted | negative | neutral | positive |
 |---|---|---|---|
-| negative | 1,168 | 138 | 1,580 |
-| neutral | 270 | 59 | 1,190 |
-| positive | 648 | 220 | 14,727 |
+| negative | 1,178 | 143 | 1,565 |
+| neutral | 273 | 54 | 1,192 |
+| positive | 628 | 210 | 14,757 |
 
 ![Sentiment vs. rating confusion matrix](charts/sentiment_vs_rating.png)
 
-**What this tells you**: the 79.77% headline is real but somewhat inflated
+**What this tells you**: the 79.94% headline is real but somewhat inflated
 by class imbalance — about 78% of this sample is star-rating-positive, so
 even an "always predict positive" baseline would land close to that
 number. Looking at the crosstab instead of the single accuracy figure:
-VADER is genuinely strong on positive reviews (14,727/15,595 correctly
-classified, ~94.4%), but noticeably weaker on negative reviews
-(1,168/2,886 correctly classified, ~40.5%) — in fact more true-negative
-reviews get misclassified as positive (1,580) than are correctly
-identified as negative (1,168). It is weakest of all on neutral/mixed
-sentiment — only 59 of 1,519 true-neutral (3-star) reviews were
-classified as neutral, with most instead pulled toward positive (1,190)
-or negative (270). In short: VADER is a reliable positive-sentiment
+VADER is genuinely strong on positive reviews (14,757/15,595 correctly
+classified, ~94.6%), but noticeably weaker on negative reviews
+(1,178/2,886 correctly classified, ~40.8%) — in fact more true-negative
+reviews get misclassified as positive (1,565) than are correctly
+identified as negative (1,178). It is weakest of all on neutral/mixed
+sentiment — only 54 of 1,519 true-neutral (3-star) reviews were
+classified as neutral, with most instead pulled toward positive (1,192)
+or negative (273). In short: VADER is a reliable positive-sentiment
 detector, but it under-detects negative sentiment and essentially can't
 detect the "it's fine, not great" middle ground that 3-star ratings
 represent — both real limitations, not just an artifact of the neutral
@@ -41,31 +41,42 @@ class alone.
 
 ## Topics found (NMF, 8 topics)
 
+Review text is stripped of HTML markup (mostly stray `<br />` tags, present
+in about a quarter of this sample) before topic modeling — see
+[Method](#method) below. Without that cleaning step, one of the 8 "topics"
+was really just the HTML artifact `br`, not a real theme.
+
 | Topic | Reviews | Top words |
 |-------|---------|-----------|
-| 0 | 4,707 | like, taste, good, flavor, chocolate, just, really, sugar, sweet, don |
-| 1 | 2,056 | coffee, cup, strong, cups, bold, flavor, roast, like, keurig, smooth |
-| 2 | 2,423 | br, water, bag, pack, ingredients, want, salt, review, natural, box |
-| 3 | 1,530 | tea, green, teas, drink, bags, black, stash, iced, cup, chai |
-| 4 | 1,477 | food, cat, cats, eat, dry, canned, dog, foods, chicken, old |
-| 5 | 5,248 | product, great, amazon, price, order, store, buy, time, stores, shipping |
-| 6 | 1,559 | dog, treats, dogs, loves, treat, love, training, small, chew, teeth |
-| 7 | 1,000 | chips, salt, bag, potato, chip, snack, love, kettle, flavor, vinegar |
+| 0 | 4,187 | like, taste, good, flavor, just, really, water, don, little, tastes |
+| 1 | 2,219 | coffee, cup, strong, cups, bold, roast, keurig, flavor, smooth, blend |
+| 2 | 1,559 | tea, green, teas, bags, drink, black, stash, iced, cup, love |
+| 3 | 1,563 | food, cat, cats, eat, dry, canned, foods, dog, chicken, diet |
+| 4 | 5,268 | product, great, price, amazon, order, store, buy, time, shipping, stores |
+| 5 | 1,557 | dog, treats, dogs, loves, treat, love, training, small, chew, teeth |
+| 6 | 942 | chips, salt, bag, potato, chip, snack, love, kettle, flavor, vinegar |
+| 7 | 2,705 | chocolate, cookies, free, bars, gluten, love, bar, sugar, snack, butter |
 
-Topic 5 (product/purchase-experience language — price, order, shipping,
-store) is the largest, at 5,248 of 20,000 reviews (~26.2%). The rest split
-fairly cleanly along product category: sweets/chocolate (0), coffee (1),
-packaging/ingredients (2), tea (3), pet food (4), dog treats (6), and
-snack chips (7).
+Topic 4 (product/purchase-experience language — price, order, shipping,
+store) is the largest, at 5,268 of 20,000 reviews (~26.3%). The rest split
+fairly cleanly along product category: taste/flavor in general (0), coffee
+(1), tea (2), pet food (3), dog treats (5), snack chips (6), and
+chocolate/cookies (7).
 
 ![Review volume by topic](charts/topics.png)
 
 ## Method
 
+- Text cleaning: HTML tags (mostly stray `<br />` line breaks present in
+  the raw scraped review text) are stripped once, before both sentiment
+  scoring and topic modeling, so the two stay consistent
+  (`analysis/text_cleaning.py`).
 - Sentiment: VADER (`nltk.sentiment.SentimentIntensityAnalyzer`), a
   lexicon/rule-based model — free, local, no training data needed
   (`analysis/sentiment.py`).
 - Topics: TF-IDF + NMF over the review text (`analysis/topics.py`).
+- Charts: shared plotting functions used by both `run_analysis.py` and the
+  notebook (`analysis/plots.py`).
 - Chosen over the Claude API specifically to keep this project free to
   run and fully reproducible by anyone who clones the repo.
 
