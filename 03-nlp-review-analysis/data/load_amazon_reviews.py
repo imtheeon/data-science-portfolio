@@ -20,14 +20,25 @@ import pandas as pd
 
 DATA_DIR = Path(__file__).parent
 KAGGLE_DATASET = "snap/amazon-fine-food-reviews"  # confirmed in Task 1 Step 3
+KAGGLE_CSV_NAME = "Reviews.csv"  # the known real filename for this dataset
 SAMPLE_SIZE = 20_000
 SAMPLE_SEED = 42
 
 
-def download() -> Path:
+def _pick_csv() -> Path | None:
+    """Prefer the known real dataset filename over an arbitrary glob match,
+    since DATA_DIR can also contain other loose CSVs."""
+    preferred = DATA_DIR / KAGGLE_CSV_NAME
+    if preferred.exists():
+        return preferred
     existing = list(DATA_DIR.glob("*.csv"))
+    return existing[0] if existing else None
+
+
+def download() -> Path:
+    existing = _pick_csv()
     if existing:
-        return existing[0]
+        return existing
 
     # Imported locally (not at module scope) so that importing this module
     # does not require kaggle credentials or network access - keeps offline
@@ -36,10 +47,10 @@ def download() -> Path:
 
     kaggle.api.authenticate()
     kaggle.api.dataset_download_files(KAGGLE_DATASET, path=str(DATA_DIR), unzip=True)
-    downloaded = list(DATA_DIR.glob("*.csv"))
+    downloaded = _pick_csv()
     if not downloaded:
         raise FileNotFoundError(f"No CSV found in {DATA_DIR} after download.")
-    return downloaded[0]
+    return downloaded
 
 
 def load_sample(n: int = SAMPLE_SIZE, seed: int = SAMPLE_SEED) -> pd.DataFrame:

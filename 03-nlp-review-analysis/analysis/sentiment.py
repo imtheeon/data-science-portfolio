@@ -29,7 +29,7 @@ def score_sentiment(texts: list[str]) -> pd.DataFrame:
         else:
             label = "neutral"
         rows.append({"compound": compound, "predicted_label": label})
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=["compound", "predicted_label"])
 
 
 def rating_to_label(rating: int) -> str:

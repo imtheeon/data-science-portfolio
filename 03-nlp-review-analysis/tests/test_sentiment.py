@@ -15,6 +15,12 @@ def test_score_sentiment_obvious_cases():
     assert df.iloc[1]["compound"] < 0
 
 
+def test_score_sentiment_empty_input_has_typed_columns():
+    df = score_sentiment([])
+    assert list(df.columns) == ["compound", "predicted_label"]
+    assert len(df) == 0
+
+
 def test_rating_to_label():
     assert rating_to_label(5) == "positive"
     assert rating_to_label(4) == "positive"
