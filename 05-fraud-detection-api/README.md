@@ -1,7 +1,8 @@
 # Fraud Detection Live API
 
 A real RandomForest classifier trained on the real ULB Credit Card Fraud
-dataset, deployed as a rate-limited FastAPI endpoint.
+dataset, packaged as a rate-limited FastAPI endpoint, configured to deploy
+on Render's free tier (not yet deployed — see Live demo section).
 
 **Real dataset**: [Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
 via Kaggle — 284,807 real anonymized European credit card transactions,
@@ -42,10 +43,12 @@ trade-off for imbalanced fraud data, not near-perfect detection.
   external service, no added cost as traffic grows).
 - No paid API dependency — the model is a local scikit-learn artifact
   loaded from disk; nothing to leak, nothing billed per call.
-- Deployed on Render's free tier, `autoDeploy: false` — going live is a
-  deliberate, separate action, not automatic on push.
-- Render's free tier sleeps after inactivity — the first request after a
-  period of no traffic will be slow (cold start); this is expected.
+- Configured to deploy on Render's free tier via `render.yaml` (repo root),
+  `autoDeploy: false` — going live is a deliberate, separate action, not
+  automatic on push. Not yet deployed.
+- Once deployed, Render's free tier sleeps after inactivity — the first
+  request after a period of no traffic will be slow (cold start); this is
+  expected.
 
 ## Run it locally
 
@@ -54,12 +57,18 @@ python3 -m venv venv && source venv/bin/activate
 pip install -r requirements-train.txt
 python train_model.py               # trains on the real dataset (needs Kaggle API creds)
 pip install -r requirements.txt
-pip install pytest httpx
+pip install -r requirements-dev.txt
 python -m pytest tests/ -v          # verify the API
 uvicorn api.main:app --port 8000    # run it
 ```
 
-Or with Docker: `docker build -t fraud-detection-api . && docker run -p 8000:8000 fraud-detection-api`
+Or with Docker (run from inside `05-fraud-detection-api/`):
+`docker build -t fraud-detection-api . && docker run -p 8000:8000 fraud-detection-api`
+
+Note: this Dockerfile has not been build-tested in this environment (Docker
+was unavailable); it follows standard patterns and Task 2's Python-level
+tests cover the actual application logic, but treat the container build
+itself as unverified until run for real.
 
 ## Live demo
 
