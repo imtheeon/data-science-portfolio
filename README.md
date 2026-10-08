@@ -13,13 +13,20 @@ labeled explicitly in its README.
 
 ## Projects
 
-| # | Project | What it demonstrates | Demo |
-|---|---------|----------------------|------|
-| 1 | [A/B Testing & Experimentation](01-ab-testing-experimentation/) | Hypothesis testing, power analysis, ship/no-ship decisions | _pending deployment_ |
-| 2 | [Customer Segmentation](02-customer-segmentation/) | RFM analysis, K-means clustering, marketing action mapping | [README](02-customer-segmentation/README.md) _(pending deployment)_ |
-| 3 | [NLP Review Analysis](03-nlp-review-analysis/) | Sentiment classification, topic modeling | _pending deployment_ |
-| 4 | [Movie Recommender](04-movie-recommender/) | Collaborative filtering, recommendation evaluation | _pending deployment_ |
-| 5 | [Fraud Detection API](05-fraud-detection-api/) | Imbalanced classification, live FastAPI deployment | _pending deployment_ |
+| # | Project | Headline result (from the project's own README) |
+|---|---------|----------------------|
+| 1 | [A/B Testing & Experimentation](01-ab-testing-experimentation/) | Cookie Cats (90,189 real players): moving the gate from level 30 to 40 lowers 7-day retention from 19.02% to 18.20% (p = 0.0016), so no-ship. 1-day retention is inconclusive. |
+| 2 | [Customer Segmentation](02-customer-segmentation/) | Online Retail II, 5,881 customers: two segments. The 45.5% of customers in "Champions" bring 90.2% of revenue. |
+| 3 | [NLP Review Analysis](03-nlp-review-analysis/) | Amazon Fine Food Reviews, 20,000-review sample: VADER agrees with the star rating 79.94% of the time, but catches only about 41% of negative reviews. |
+| 4 | [Movie Recommender](04-movie-recommender/) | MovieLens 100k: RMSE 1.0424 and Precision@5 of 0.032, about 1.76x a random baseline. |
+| 5 | [Fraud Detection API](05-fraud-detection-api/) | Credit-card fraud (0.17% fraud rate): PR-AUC 0.83, catching 79 of 98 frauds in the test set at 0.84 precision. FastAPI and Docker, configured for Render but not deployed yet. |
+
+None of these is deployed. Each project has run instructions and tests in its folder.
+
+## Also in my portfolio
+
+- [ml-pipeline-pricing-promo](https://github.com/imtheeon/ml-pipeline-pricing-promo) and [ml-pipeline-fremtpl2-claims](https://github.com/imtheeon/ml-pipeline-fremtpl2-claims): full gated machine-learning pipelines with a locked final exam
+- [claim-denial-analysis](https://github.com/imtheeon/claim-denial-analysis), [review-insights-ai](https://github.com/imtheeon/review-insights-ai) and [pricing-promo-analysis](https://github.com/imtheeon/pricing-promo-analysis): SQL and dashboard analyses that end in ranked recommendations
 
 ## Note on data
 
